@@ -6,7 +6,7 @@ level = [
     '                                                                         |',
     '                                                                         |',
     '                                                                         |',
-    '  S           U            UU           UUU                              |',
+    '   S           XXXXXXXXXXXXUU                                            |',
     'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  |',
 ]
 

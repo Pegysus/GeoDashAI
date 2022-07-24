@@ -38,33 +38,44 @@ class Level:
         cube.rect.x += cube.x_speed
 
         for block in self._blocks.sprites():
-            if cube and block.rect.colliderect(cube.rect):
+            if cube and block.rect.colliderect(cube.collideRect):
                 self.stop()
 
         for spike in self._spikes.sprites():
-            if cube and spike.rect.colliderect(cube.rect):
+            if cube and spike.collideRect.colliderect(cube.collideRect):
                 self.stop()
 
     def _vert_mvt_collision(self):
         cube = self._player.sprite
+
         if cube and cube.midair:
             cube.apply_gravity()
+            if cube.midair_ticks > 5:
+                cube.rotate()
         elif cube:
+            cube.reset_angle()
             cube.direction.y = 0
+            cube.midair_ticks = 0
+
+        if cube and not any(block.rect.colliderect(cube.collideRect) for block in self._blocks.sprites()):
+            cube.midair = True
+            cube.midair_ticks += 1
 
         for block in self._blocks.sprites():
-            if cube and block.rect.colliderect(cube.rect):
+            if cube and block.rect.colliderect(cube.collideRect):
                 if cube.direction.y > 0:
                     cube.rect.bottom = block.rect.top
+                    cube.collideRect.bottom = block.rect.top
                     cube.direction.y = 0
                     cube.midair = False
 
                 elif cube.direction.y < 0:
                     cube.rect.top = block.rect.bottom
+                    cube.collideRect.top = block.rect.bottom
                     cube.direction.y = 0
 
         for spike in self._spikes.sprites():
-            if cube and spike.rect.colliderect(cube.rect):
+            if cube and spike.collideRect.colliderect(cube.collideRect):
                 self.stop()
 
     def run(self):
@@ -75,6 +86,7 @@ class Level:
 
         if self._player.sprite:
             self._player.update()
+
             self._horz_mvt_collision()
             self._vert_mvt_collision()
             self._player.draw(self._display)
