@@ -25,14 +25,15 @@ class Player(pygame.sprite.Sprite):
 
         self.midair = False
         self.midair_ticks = 0
+        self.jumping = False
 
     # binds jump to spacebar for gameplay
     def get_input(self):
         """inputs from keyboard/mouse of player"""
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE] and not self.midair:
-            self.jump()
+        # if keys[pygame.K_SPACE] and not self.midair:
+        #     self.jump()
 
     def apply_gravity(self):
         """gravity mechanics of the game"""
@@ -46,6 +47,7 @@ class Player(pygame.sprite.Sprite):
         """makes cube jump"""
         self.direction.y = self.jump_speed
         self.midair = True
+        self.jumping = True
 
     def rotate(self):
         """rotation animation while midair"""

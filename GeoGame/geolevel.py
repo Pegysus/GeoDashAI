@@ -28,6 +28,9 @@ class Level:
         self.win = False
         self.distance = 0
 
+        self.on_ground = False
+        self.game_over = False
+
     def setup(self, layout):
         """read settings and setup using the string of the level"""
         for rows, r in enumerate(layout):
@@ -83,6 +86,7 @@ class Level:
         if cube and not any(block.rect.colliderect(cube.collideRect) for block in self._blocks.sprites()):
             cube.midair = True
             cube.midair_ticks += 1
+            self.on_ground = False
 
         # block collisions
         for block in self._blocks.sprites():
@@ -93,6 +97,8 @@ class Level:
                     cube.collideRect.bottom = block.rect.top
                     cube.direction.y = 0
                     cube.midair = False
+                    cube.jumping = False
+                    self.on_ground = True
 
                 elif cube.direction.y < 0:
                     cube.rect.top = block.rect.bottom
@@ -131,14 +137,20 @@ class Level:
 
         self.distance += Level.SHIFT_SPEED/32
 
+    def player_jump(self):
+        if self.can_jump():
+            self._player.sprite.jump()
+
+    def can_jump(self):
+        return not self._player.sprite.jumping if self._player.sprite else False
+
     def stop(self):
         """stops the cube/kills it once collided to an object"""
         cube = self._player.sprite
         if cube:
             cube.kill()
         self._world_shift = Level.GAME_OVER
-        # for display purposes
-        print(self.distance)
+        self.game_over = True
 
     def finish_game(self):
         """level is completed"""
